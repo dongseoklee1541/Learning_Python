@@ -360,7 +360,7 @@ list 는 또한 tuple의 배열을 바꿀 수 있다.
 
 ### Byte arrays
 
-바이트 배열은 byte와 마찬가지로 binary data 를 다루는데, bytes 는 1바이트 단위로 값을 연속적으로 저장하는 시퀸스이다(0~255,0x00~0xFF 까지 사용)
+바이트 배열은 byte와 마찬가지로 binary data 를 다루는데, bytes 는 1바이트 단위로 값을 연속적으로 저장하는 시퀸스이다(0 ~ 255, 0x00 ~ 0xFF 까지 사용)
 
 ```python
 
@@ -618,6 +618,99 @@ ex) namedtule.age , namedtule.sex ...
 
 ### DefaultDict
 
+defaultdict()는 인자로 주어진 객체(default-factory)의 기본값을 딕셔너리값의 초깃값으로 지정할 수 있다. 
 
+defaultdict라는 말 그대로 처음 키를 지정할 때 값을 주지 않으면 해당 키에 대한 값을 디폴트 값을 지정하겠다는 뜻이다.
 
+기존의 dict 형식의 초깃값 지정방식은 이렇다.
+
+```python
+>>> d = {}
+>>> d['age'] = d.get('age',0) + 1 # 0 + 1 을 얻게 된다.
+>>> d
+{'age': 1}
+>>> d = {'age' : 39}
+>>> d['age'] = d.get('age',0) +1 # 기존에 age라는 key가 있으므로 39 + 1
+>>> d
+{'age': 40}
+```
+
+defaultdict 의 예시이다.
+
+```python
+>>> from collections import defaultdict
+>>> dd = defaultdict(int) # values 값이 없을때 기본값인 keys로 받음
+>>> dd['age'] += 1
+>>> dd
+defaultdict(<class 'int'>, {'age': 1})
+>>> dd['age'] = 39
+>>> dd['age'] += 1
+>>> dd
+defaultdict(<class 'int'>, {'age': 40})
+```
+
+### ChainMap
+이 object는 여러 dicts 또는 다른 매핑을 그룹화하여 업데이트 가능한 단일보기를 만든다.
+이것은 dicts에서 update 하는것보다 빠르다.
+
+```python
+>>> from collections import ChainMap
+>>> default_connection = {'host' : 'localhost', 'port' : 4567}
+>>> connection = {'port' : 5678}
+>>> conn = ChainMap(connection, default_connection) # map을 만들고
+>>> conn['port'] # 첫번째 dict 에서 port를 찾고
+5678
+>>> conn['host'] # 두번째 dict 에서 host를 찾는다.
+'localhost'
+>>> conn.maps # mapping objects를 확인
+[{'port': 5678}, {'host': 'localhost', 'port': 4567}]
+>>> conn['host'] = 'packpub.com' # host를 추가하자
+>>> conn.maps
+[{'port': 5678, 'host': 'packpub.com'}, {'host': 'localhost', 'port': 4567}]
+>>> del conn['port'] # port 정보를 삭제하면
+>>> conn.maps
+[{'host': 'packpub.com'}, {'host': 'localhost', 'port': 4567}]
+>>> conn['port'] # 두번째 dict 에서 port를 찾는다.
+4567
+>>> dict(conn)
+{'host': 'packpub.com', 'port': 4567}
+```
+
+### Small values caching
+
+파이썬에선 같은 값을 다른 이름으로 생성하면 주소 값이 다르다.
+
+```python
+>>> a = 1000000
+>>> b = 1000000
+>>> id(a) == id(b)
+False
+```
+그렇지만 파이썬은 성능을 높이고 메모리의 용량을 확보하기 위해서 짧은(small number)들은 미리 캐싱(저장해 놓음)해놓는다. 그래서 5와 같이
+짧은 값으로 불러온다면 주소값이 같아진다.
+
+```python
+>>> a = 5
+>>> b = 5
+>>> id(a) == id(b)
+True
+```
+
+### How to choose data structures
+
+데이터 구조를 선택하는 쉽지가 않다. 코드를 작성하면서 코드가 잘 진행된다면 문제가 없지만
+복잡해 진다면 다른 데이터 구조를 선택하는 것이 맞을것이다.
+
+### About indexing and slicing
+
+slicing은 대체로 순서가 있는 자료형(tuples, lists, strings, etc.)등에 사용 될 수 있다.
+하지만 순서가 없는 자료형(dicts, sets)은 사용할 수 없다.
+
+### About the names
+
+책의 예제에서는 name을 a,b,c,d 와 같이 짧게 사용 했지만, 실제로는 명확한 의미가 전달되는
+이름으로 만들어져야 한다. 
+
+또한 customers_list, customers_tuple, or customers_collection 와 같이 데이터 타입을 명시적으로 사용하지 않는게 좋다. 왜냐하면, 중간에 데이터 타입을 바꾸고 싶어지면 name을 
+일일히 다 바꿔야 하는 작업을 해야 하기 때문이다.
 
