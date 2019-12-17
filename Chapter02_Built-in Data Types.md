@@ -497,3 +497,127 @@ False
 
 ```
 
+* dic.keys(): key 값들을 읽기
+* dic.values() : values 값을 읽어오기
+* dic.items() : key 값과 values 값을 함께 튜플형으로 읽기
+
+```python
+
+>>> d = dict(zip('hello',range(5)))
+>>> d
+{'h': 0, 'e': 1, 'l': 3, 'o': 4} # 중복된 'l'은 뒤에 값으로만 저장된다.
+>>> d.keys()
+dict_keys(['h', 'e', 'l', 'o'])
+>>> d.values()
+dict_values([0, 1, 3, 4])
+>>> d.items()
+dict_items([('h', 0), ('e', 1), ('l', 3), ('o', 4)])
+>>> 3 in d.values()
+True
+>>> ('o',4) in d.items()
+True
+
+```
+
+dic.popitem() : 랜덤으로 아이템 제거
+dic.pop(arg) : arg로 입력받은 key 값 제거
+
+```python
+
+>>> d
+{'h': 0, 'e': 1, 'l': 3, 'o': 4}
+>>> d.popitem() # 랜덤하게 아이템 제거
+('o', 4)
+>>> d
+{'h': 0, 'e': 1, 'l': 3}
+>>> d.pop('l') # 'l' key값 제거
+3
+>>> d.pop('not-a-key') # dict에 없는 키값 제거
+SyntaxError: EOL while scanning string literal
+>>> d.pop('not-a-key', 'defalut-value')
+'defalut-value'
+>>> d.update({'another':'vaule'}) # dict 아이템 추가
+>>> d.update(a=13) # 이런 방식도 가능
+>>> d
+{'h': 0, 'e': 1, 'another': 'vaule', 'a': 13}
+>>> d.get('a') # d['a'] 와 같다
+13
+>>> d.get('a',177) # 만약 key의 value 가 없다면 177로 나오지만 이건 있으니 나오고
+13
+>>> d.get('b',177) # 얘는 value 가 없으니 177로 나온다.
+177
+>>> d.get('b') # key가 없으면 None이 반환된다.
+```
+
+#### False vs None
+
+False : information은 있지만, 정보가 다른 경우 False
+None : information 이 없다.
+
+이 두가지는 상당히 큰 차이점을 보이는데, False 는 있지만 다른거고 None 은 없다는 의미다.
+
+* dic.setdefault(args,args) : get()과 같은 기능을 하지만, 기존에 dict의 key에 주어진 values가 없다면 설정한 values를 넣어주지만 있다면 적용하지 않는다.
+
+```python
+
+>>> d = {}
+>>> d.setdefault('a',1) # 'a' 가 없을때 주어진 값으로 설정
+1
+>>> d
+{'a': 1}
+>>> d.setdefault('a',5) # 'a'가 이미 있다면
+1
+>>> d # 작동하지 않는다
+{'a': 1}
+
+```
+
+## The colloections module
+파이썬에서 기본으로 제공되는 types(tuple,list,set and dict)이 충분하지 않다면
+특별한 데이터 타입을 제공하는데 이것이 **colloections module** 이다.
+
+* namedtuple : 이름 붙은 필드를 갖는 튜플 서브 클래스를 만들기 위한 팩토리 함수
+* deque : 양쪽 끝에서 빠르게 추가와 삭제를 할 수 있는 리스트류 컨테이너
+* ChainMap : 여러 매핑의 단일 뷰를 만드는 딕셔너리류 클래스
+* Counter : 해시 가능한 객체를 세는 데 사용하는 딕셔너리 서브 클래스
+* OrderedDict : 항목이 추가된 순서를 기억하는 딕셔너리 서브 클래스
+* defaultdict : 누락된 값을 제공하기 위해 팩토리 함수를 호출하는 딕셔너리 서브 클래스
+* UserDict : 더 쉬운 딕셔너리 서브 클래싱을 위해 딕셔너리 개체를 감싸는 래퍼
+* UserList : 더 쉬운 리스트 서브 클래싱을 위해 리스트 객체를 감싸는 래퍼
+* UserString : 더 쉬운 문자열 서브 클래싱을 위해 문자열 객체를 감싸는 래퍼
+
+
+### Named Tuples
+
+튜플은 항목에 인덱스로 접근하므로 직관적이지 않다.
+ex) mytule[0],mytule[1]... 
+
+```python
+>>> vision = (9.5,8.8)
+>>> vision
+(9.5, 8.8)
+>>> vision[0]
+9.5
+```
+
+그렇지만 네임드 튜플은 사용자가 항목에 이름을 붙일 수 있다.
+ex) namedtule.age , namedtule.sex ...
+
+```python
+>>> from collections import namedtuple
+>>> Vision = namedtuple('Vision',['left','right'])
+>>> vision = Vision(9,5, 8.8)
+>>> vision = Vision(9.5, 8.8)
+>>> vision[0]
+9.5
+>>> vision.left
+9.5
+>>> vision.right
+8.8
+```
+
+### DefaultDict
+
+
+
+
