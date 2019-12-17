@@ -90,3 +90,68 @@ False + 42
 # 42
 ```
 
+## Reals
+파이썬은 IEEE 754 부동소수점을 double-precision(64 bits)만을 사용한다.
+
+## Complex numbers(복소수)
+파이썬은 복소수를 지원한다. 프로그래밍에서는 i를 j로 표기한다.
+
+```python
+c = 3.14 + 2.73j # 2.73 이 imaginary 부분이다.
+
+c.read # real part
+# 3.14
+c.imag # imaginary part
+# 2.73
+
+c.conjugate() # conjugate of A + Bj is A - Bj
+# (3.14-2.73j)
+
+c * 2 # 곱셈도 가능하다.
+# (6.28+5.46j)
+c ** 2 # 제곱도 가능
+# (2.4067000000000007+17.1444j) 
+
+d = 1 + 1j # 덧셈 뺄셈도 가능하다.
+c - d 
+# (2.14+1.73j)
+```
+
+## Fractions and decimals (분수와 십진수)
+
+```python
+from fractions import Fraction
+
+Fraction(10,6) 
+# Fraction(5,3) # 분모와 분자를 서로 나눠 가장 작은 수로 만들어준다.
+
+Fraciton(1,3) + Fraction(2,3) # 1/3 + 2/3 = 3/3 = 1/1
+# Fraction(1,1)
+
+f = Fraction(10,6)
+f.numberator
+# 5
+f.denominator
+# 3
+```
+
+decimals 은 부동소수점을 사용하는 수가 아니라 십진수를 사용하기에 소수 표현이 더 정확하다.
+
+```python
+
+from decimal import Decimal as D
+
+D(3.14) # 그냥 숫자로 표기할 경우 부동소수점으로 나타낸다.
+# Decimal('3,140000000000000124344978758017532527446746826171875')
+
+D('3.14') # string으로 사용해야 십진수로 사용 할 수 있다.
+# Decimal('3.14')
+
+D('0.1') * D(3) - D('0.3') # string 으로 사용한다면
+#Decimal('0.0') 으로 정확하게 계산된다.
+```
+
+## Immutable sequences
+strings, tuples, and bytes 등이 존재한다.
+
+### Strings and bytes
