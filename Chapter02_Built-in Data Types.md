@@ -552,6 +552,7 @@ SyntaxError: EOL while scanning string literal
 #### False vs None
 
 False : information은 있지만, 정보가 다른 경우 False
+
 None : information 이 없다.
 
 이 두가지는 상당히 큰 차이점을 보이는데, False 는 있지만 다른거고 None 은 없다는 의미다.
