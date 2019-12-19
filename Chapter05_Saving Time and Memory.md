@@ -241,6 +241,170 @@ Traceback (most recent call last): # for  loop 에서 반복이 끝났음을 알
     print(next(squares))
 StopIteration
 
+# 하지만 generator도 return 값을 가질 수 있고, 이는 조건에 따라서 종료시킬 수 있다는 것이다.
+
+>>> def geometric_progression(a,q):
+	k = 0
+	while True:
+		result = a * q**k
+		if result <= 100000:
+			yield result
+		else:
+			return
+		k += 1
+		
+>>> for n in geometric_progression(2,5):
+	print(n)
+2
+10
+50
+250
+1250
+6250
+31250
+# 31259 이상의 값은 100000의 범위를 넘어가서 너무 크다. else에서 return 으로 끝
+# generator 는 for 문과 함께 쓰이는데, for 문은 자신이 멈출 곳이 어디인지 알고 있기 때문이다.
+
+"""
+generator 는 next(a)와 같은 역할을 하는 a.__next__() 가 있다.
+"""
+>>> next(res)
+2
+>>> def get_sqaures_gen(n):
+	for x in range(n):
+		yield x ** 2
+
+		
+>>> squares = get_squares_gen(3)
+>>> print(squares.__next__())
+0
+
+# 무한 루프할 while 문도 필요할때 꺼내 쓸 수 있다.
+>>> def counter(start=0):
+	n = start
+	while True:
+		yield n
+		n+=1
+
+>>> c = counter()
+>>> print(next(c))
+0
+>>> c.__next__()
+1
+
+# 무한 루프를 하는 것을 어떻게 중단 할 수 있을까? flag 를 사용하자.
+>>> stop = False # stop 이 flag 로 사용.
+>>> def counter(start=0):
+	n = start
+	while not stop:
+		yield n
+		n += 1
+
+>>> c = counter()
+>>> print(next(c))
+0
+>>> print(next(c))
+1
+>>> print(next(c))
+2
+>>> stop = True # 이제 제네레이터는 중단된다.
+>>> print(next(c))
+Traceback (most recent call last):
+  File "<pyshell#388>", line 1, in <module>
+    print(next(c))
+StopIteration
+
+# 하지만 이러한 방법 말고 직접 제네레이터에게 보내는 방법이 있다. generator.send()를 쓰면 된다.
+def counter(start=0):
+	n = start
+	while True:
+		result = yield n
+		print(type(result), result)
+		if result == 'Q':
+			break
+		n += 1
+
+>>> c = counter()
+>>> print(next(c))
+0
+>>> print(c.send('Wow!'))
+<class 'str'> Wow!
+1
+>>> print(next(c))
+<class 'NoneType'> None
+2
+>>> print(c.send('Q'))
+<class 'str'> Q # result에 'Q'가 들어갔고, 그 순간 종료된다.
+Traceback (most recent call last):
+  File "<pyshell#402>", line 1, in <module>
+    print(c.send('Q'))
+StopIteration
+
+# The yield from expression
+
+>>> def print_squares(start,end):
+	for n in range(start,end):
+		yield n ** 2
+
+>>> for n in print_squares(2,5):
+	print(n)
+
+4
+9
+16
+
+"""
+ yield로 값을 한 번씩 바깥으로 전달했습니다. 그래서 값을 여러 번 바깥으로 전달할 때는 for 또는 while 반복문으로 반복하면서 yield를 사용했습니다. 다음은 리스트의 1, 2, 3을 바깥으로 전달합니다. 
+
+yield from 반복가능한객체
+yield from 이터레이터
+yield from 제너레이터객체
+"""
+>>> def print_squares(start,end):
+	yield from (n ** 2 for n in range(start,end)) # 짧고 읽기 쉽다.
+
+>>> for n in print_squares(2,5):
+	print(n)
+
+4
+9
+16
+
+# Generator expressions
+"""
+제네레이터는 () 로 둘러싸서 사용 할 수 있다.
+"""
+>>> cubes = [k**3 for k in range(10)] # [] 를 사용해 list로
+>>> cubes
+[0, 1, 8, 27, 64, 125, 216, 343, 512, 729]
+>>> type(cubes)
+<class 'list'>
+>>> cubes_gen = (k**3 for k in range(10)) # 위와 같은 식이지만 ()를 사용해 generator로
+>>> cubes_gen
+<generator object <genexpr> at 0x00BF1F70>
+>>> type(cubes_gen)
+<class 'generator'>
+>>> list(cubes_gen) 
+[0, 1, 8, 27, 64, 125, 216, 343, 512, 729] # 여기서 generator 를 다 불러서
+>>> list(cubes_gen)
+[] # 내용이 비게 된다.
+
+# map,zip을 활용해 만든 코드
+>>> s1 = sum(map(lambda n : adder(*n), zip(range(100),range(1,101))))
+>>> s2 = sum(adder(*n) for n in zip(range(100),range(1,101)))
+
+# 위에 두 코드는 같은 역할을 한다. 이제 제네레이터로 비교해서 표현해본다.
+>>> cubes = [x**3 for x in range(10)]
+>>> odd_cubes1 = filter(lambda cube: cube %2, cubes)
+>>> odd_cubes2 = (cube for cube in cubes if cube % 2)
+
+# odd_cubes1 와 odd_cubes2 는 같은 표현식이지만, 제네레이터가 더 읽기 쉽다.
+
+s = sum([n**2 for n in range(10**8)]) # this is killed, 0부터 10**8까지 모두 저장후 계산
+s = sum(n**2 for n in range(10**8)) # this succeeds 0부터 10**8까지 계산하며 지워짐
+
+
+# Some performance considerations
 
 ```
 
