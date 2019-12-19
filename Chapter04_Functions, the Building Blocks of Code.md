@@ -356,5 +356,29 @@ __qualname__ -> multiplication
 __module__ -> __main__
 __defaults__ -> (1,)
 _code__ -> <code object multiplication at 0x00C303E8,
+__dict__ -> {}
+__closure__ -> None
+__annotations__ -> {}
+__kwdefaults__ -> None
+
+# One final example
+# 이전에 사용한 소수 찾기 함수 개선버전
+>>> from math import sqrt, ceil
+>>> def get_primes(n):
+	"""Calculate a list of pirmes up to n (included). """
+	primelist = []
+	for candidate in range(2, n+1):
+		is_prime = True
+		root = int(ceil(sqrt(candidate)))
+		for pirme in primelist:
+			if prime > root:
+				break
+			if candidate % pirme == 0:
+				is_prime = False
+				break
+		if is_prime:
+			primelist.append(candidate)
+	return primelist
+
 
 ```
