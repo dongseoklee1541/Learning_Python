@@ -407,6 +407,134 @@ s = sum(n**2 for n in range(10**8)) # this succeeds 0부터 10**8까지 계산�
 
 
 # Some performance considerations
+"""
+같은 내용을 실행하더라도, 메모리 사용량 및 실행시간은 크게 차이가 난다.
+"""
+>>> from time import time
+>>> t = time()
+>>> mx = 1000
+>>> t = time()
+>>> dmloop = []
+>>> for a in range(1,mx):
+	for b in range(a,mx):
+		dmloop.append(divmod(a,b))
+>>> print('for loop: {:.4f} s'.format(time()-t))
+for loop: 51.7115 s # for 문을 활용한 경우
+>>> t= time()
+>>> dmlist = [
+	divmod(a,b) for a in range(1,mx) for b in range(a,mx)]
+>>> print('list comprehension: {:.4f} s'.format(time() - t))
+list comprehension: 42.8383 s # list 활용
+>>> t = time()
+>>> dmgen = list(
+	divmod(a,b) for a in range(1,mx) for b in range(a, mx))
+>>> print('generator expression: {:.4f} s'.format(time() -t))
+generator expression: 45.4215 s # 제네레이터 활용
+>>> print(dmloop == dmlist == dmgen, len(dmloop))
+True 499500
 
+# for 문이 전체적으로 느리다. list 와 map 함수랑 비교하면 어떨까?
+>>> mx = 2 * 10 * 74
+>>> t = time()
+>>> absloop = []
+>>> for n in range(mx):
+	absloop.append(abs(n))
+>>> print('for loop: {:.4f} s'.format(time() - t))
+for loop: 34.8191 s # for loop 
+>>> t= time()
+>>> abslist = [abs(n) for n in range(mx)]
+>>> print('list comprehension: {:.4f} s'.format(time() - t))
+list comprehension: 35.5287 s # list 
+>>> t= time()
+>>> absmap = list(map(abs,range(mx)))
+>>> print('map: {:.4f} s'.format(time() - t))
+map: 23.5921 s # 가장 빠른 map
+>>> print(absloop == abslist == absmap)
+True
+
+# Don't overdo comprehensions and generators
+""" 제네레이터를 활용하다가 너무 복잡한 코드를 짜지 말아라. 가독성이 떨어지는 코드가 된다.
+>>> def gcd(a,b):
+	while b != 0:
+		a,b = b, a % b
+	return a
+
+>>> N = 50
+>>> triples = sorted( # 과한 제네레이터 사용으로 가독성이 떨어짐
+	((a,b,c) for a,b,c in (
+		((m**2 - n**2), (2*m*n), (m**2 + n**2))
+		for m in range(1,int(N**.5) +1)
+		for n in range(1,m)
+		if (m-n) %2 and gcd(m,n) == 1
+	)if c <= N), key=lambda *triple: sum(*triple))
+>>> print(triples)
+[(3, 4, 5), (5, 12, 13), (15, 8, 17), (7, 24, 25), (21, 20, 29), (35, 12, 37), (9, 40, 41)]
+
+# Name localization
+>>> A = 100
+>>> ex1 = [A for A in range(5)]
+>>> print(A)
+100
+>>> ex1
+[0, 1, 2, 3, 4]
+>>> ex2 = list(A for A in range(5))
+>>> ex2
+[0, 1, 2, 3, 4]
+>>> print(A)
+100
+>>> ex3 = dict((A,2*A) for A in range(5))
+>>> print(A)
+100
+>>> ex3
+{0: 0, 1: 2, 2: 4, 3: 6, 4: 8}
+>>> ex4 = set(A for A in range(5))
+>>> print(A)
+100
+>>> ex4
+{0, 1, 2, 3, 4}
+>>> s = 0
+>>> for A in range(5):
+	s += A
+>>> print(A)
+4 # 왜 여기만 A가 4가 되는가? 나머지는 모두 Local name 으로 새로 생성된 것들이기 때문이다.
+
+# One last example
+
+>>> def fibonacci(N):
+	result = [0]
+	next_n = 1
+	while next_n <=N:
+		result.append(next_n)
+		next_n = sum(result[-2:])
+	return result
+
+>>> print(fibonacci(0))
+[0]
+>>> print(fibonacci(1))
+[0, 1, 1]
+>>> print(fibonacci(50))
+[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+
+>>> def fibonacci(N):
+	yield 0
+	if N == 0 :
+		return
+	a = 0
+	b = 1
+	while b <= N:
+		yield b
+		a,b = b, a+b
+>>> print(list(fibonacci(0)))
+[0]
+>>> print(list(fibonacci(1)))
+[0, 1, 1]
+>>> print(list(fibonacci(50)))
+[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+
+>>> def fibonaicci(N): # 더 간단한 버전
+	a,b = 0,1
+	while a<= N:
+		yield a
+		a,b = b, a+b
 ```
 
