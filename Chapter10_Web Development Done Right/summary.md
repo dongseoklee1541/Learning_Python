@@ -30,3 +30,14 @@ layer에서 공급해준다. 이 메카니즘은 코드를 가장 많이 재사�
 서비스하는 view는 창에 표시되는 모든 것들을 모아 장고 템플릿 엔진에 의해 HTML 페이지로 렌더링될
 템플릿으로 공급한다. 
 
+----
+## DJango
+
+migration : 장고에게 데이터베이스를 업데이트 하라는 지시를 내리는 코드 
+* Data migrations
+* Schema migration
+
+
+username : vuno
+email address : leedongseok@vuno.co
+pawd : 마~
