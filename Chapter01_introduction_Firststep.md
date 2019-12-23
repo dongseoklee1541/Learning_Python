@@ -13,11 +13,8 @@
 * virtualenv 가상환경명 : virtualenv 로 가상환경을 생성한다.
 
 * 가상환경명/Scripts/activate : windows 가상환경 구동 방법
-
 ```
-Using base prefix 'c:\\users\\vuno\\appdata\\local\\programs\\python\\python37-32'
-New python executable in C:\Users\vuno\srv\learing.python\python\mypy\Scripts\python.exe
-Installing setuptools, pip, wheel...
+C:\Users\vuno\srv\learing.python\python\mypy\Scripts 폴더로 경로 이동 후, activate실행
 가상환경명 : mypy
 ```
 
