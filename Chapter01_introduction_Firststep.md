@@ -14,6 +14,13 @@
 
 * 가상환경명/Scripts/activate : windows 가상환경 구동 방법
 
+```
+Using base prefix 'c:\\users\\vuno\\appdata\\local\\programs\\python\\python37-32'
+New python executable in C:\Users\vuno\srv\learing.python\python\mypy\Scripts\python.exe
+Installing setuptools, pip, wheel...
+가상환경명 : mypy
+```
+
 cf. source 가상환경명/bin/activate : mac 또는 리눅스에서 가상환경 구동 방법
 
 * 가상환경이 구동되면 터미널 창의 프롬프트가 아래와 같이 변경됨
