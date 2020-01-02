@@ -65,5 +65,5 @@ from library.second_floor.section_x.row_three import book
   
 파이썬에서는 name 을 찾을때, current namespace에서 찾는다. name을 찾을 수 없을때, 파이썬은 encloseing scope, built-in scope 까지 찾아본다.
 만약 name을 찾지 못한다면, 파이썬은 **NameError exception** 을 일으킨다. 일반적으로 name이 정의되어있지 않을때 발생한다.
-
+cffi==1.9.1               # via cryptography
 
